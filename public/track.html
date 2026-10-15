@@ -1,0 +1,24 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Track your order · Worthy Pastries</title><meta name="theme-color" content="#7a3e1d"><link rel="icon" href="icon.svg"><link rel="stylesheet" href="styles.css"></head><body>
+<header class="nav"><a href="/" class="brand">🎂 Worthy Pastries</a><a href="/#menu" class="cart-btn">Order</a></header>
+<main class="section"><h2>Track your order</h2>
+<form id="tf" class="form"><label>Order number<input name="number" required placeholder="WP-261015-1234" autocapitalize="characters"></label>
+<label>Phone number used<input name="phone" type="tel" required placeholder="07XX XXX XXX"></label>
+<p id="err" class="error" hidden></p><button class="btn wide">Check status</button></form>
+<div id="res" class="confirm" hidden style="margin-top:1.5rem"></div></main>
+<a class="wa-float" href="https://wa.me/256772947573" target="_blank" rel="noopener" aria-label="WhatsApp">💬</a>
+<script>
+const $=s=>document.querySelector(s),fmt=n=>'UGX '+Number(n).toLocaleString('en-US'),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const S=['New','Confirmed','Baking','Out for delivery','Delivered'];const f=$('#tf');
+const p=new URLSearchParams(location.search),last=JSON.parse(localStorage.getItem('wp-last-order')||'null');
+if(p.get('n'))f.number.value=p.get('n');if(last&&(!p.get('n')||p.get('n')===last.number)){f.number.value=last.number;f.phone.value=last.phone}
+f.onsubmit=async e=>{e.preventDefault();$('#err').hidden=true;
+const r=await fetch('/api/track',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.fromEntries(new FormData(f)))});const o=await r.json();
+if(!r.ok){$('#err').textContent=o.error;$('#err').hidden=false;$('#res').hidden=true;return}
+const idx=S.indexOf(o.status);
+$('#res').innerHTML=`<h3>Order ${esc(o.number)}</h3><p style="font-size:1.4rem;font-weight:800">${o.status==='Cancelled'?'❌ Cancelled':esc(o.status)}</p>
+${o.status!=='Cancelled'?`<ul class="status-steps">${S.map((s,i)=>`<li class="${i<=idx?'done':''}">${s}</li>`).join('')}</ul>`:''}
+<div class="summary">${o.items.map(i=>`<div><span>${i.qty} × ${esc(i.name)} (${esc(i.size)})</span><b>${fmt(i.line)}</b></div>`).join('')}<div><span>Delivery (${esc(o.area)})</span><b>${o.delivery_fee?fmt(o.delivery_fee):'FREE'}</b></div>${o.discount?`<div><span>Discount</span><b>− ${fmt(o.discount)}</b></div>`:''}<div><b>Total</b><b>${fmt(o.total)}</b></div><div><span>Payment</span><span>${esc(o.payment)} · ${o.paid?'✅ Paid':'Not yet paid'}</span></div><div><span>Delivery date</span><span>${esc(o.date)}</span></div></div>
+<a class="btn" target="_blank" rel="noopener" href="https://wa.me/256772947573?text=${encodeURIComponent('Hello Norah, checking on order '+o.number)}">💬 Ask on WhatsApp</a>`;$('#res').hidden=false};
+if(f.number.value&&f.phone.value)f.requestSubmit();
+</script></body></html>

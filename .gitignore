@@ -1,0 +1,9 @@
+node_modules/
+data/
+.env
+*.log
+*.db
+*.db-*
+uploads/
+shot-*.png
+*.zip
