@@ -70,3 +70,6 @@ details{background:#fff;border-radius:12px;padding:.8rem 1rem;margin:.5rem auto;
 .status-steps{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center}.status-steps li{padding:.3rem .7rem;border-radius:99px;background:#eee;font-size:.85rem}.status-steps li.done{background:var(--brown);color:#fff}
 .footer .credit{font-size:.75rem;opacity:.6;margin-top:.6rem;letter-spacing:.02em}
 .footer .credit strong{font-weight:600}
+
+.promo-video{display:flex;justify-content:center;padding:1.5rem 1rem;background:#fff6e8}
+.promo-video video{width:100%;max-width:360px;height:auto;aspect-ratio:9/16;border-radius:18px;box-shadow:0 8px 24px rgba(92,51,23,.25);background:#fff6e8}
