@@ -133,20 +133,42 @@ app.post('/api/custom-requests', writeLimiter, (req, res) => {
 
 // ---------- Admin ----------
 const SECRET = process.env.SESSION_SECRET || crypto.createHash('sha256').update('wp:' + ADMIN_PASSWORD).digest('hex');
-const sign = exp => exp + '.' + crypto.createHmac('sha256', SECRET).update(String(exp)).digest('hex');
-const verify = t => { const [exp, sig] = String(t || '').split('.'); if (!exp || !sig || Date.now() > +exp) return false; const good = sign(exp).split('.')[1]; return sig.length === good.length && crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(good)); };
+if (!process.env.SESSION_SECRET) console.warn('WARNING: SESSION_SECRET not set - deriving from ADMIN_PASSWORD.');
+// Tokens carry a session generation; bumping it (on password change) invalidates all older tokens.
+const gen = () => getSetting('sessionGen', 0);
+const mac = (exp, g) => crypto.createHmac('sha256', SECRET).update(exp + '.' + g).digest('hex');
+const sign = exp => exp + '.' + gen() + '.' + mac(exp, gen());
+const verify = t => { const [exp, g, sig] = String(t || '').split('.'); if (!exp || !sig || g === undefined || Date.now() > +exp || String(gen()) !== g) return false; const good = mac(exp, g); return sig.length === good.length && crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(good)); };
 const h = s => crypto.createHash('sha256').update(String(s)).digest();
+const hashPw = pw => { const salt = crypto.randomBytes(16).toString('hex'); return { algo: 'scrypt', salt, hash: crypto.scryptSync(String(pw), salt, 64).toString('hex') }; };
+const checkPw = pw => {
+  pw = typeof pw === 'string' ? pw : '';
+  const st = getSetting('adminPasswordHash');
+  if (st && st.salt && st.hash) { const a = crypto.scryptSync(pw, st.salt, 64), b = Buffer.from(st.hash, 'hex'); return a.length === b.length && crypto.timingSafeEqual(a, b); }
+  return crypto.timingSafeEqual(h(pw), h(ADMIN_PASSWORD));
+};
+const isDefaultPw = () => !getSetting('adminPasswordHash') && ADMIN_PASSWORD === 'changeme';
 app.post('/api/admin/login', loginLimiter, (req, res) => {
-  if (!crypto.timingSafeEqual(h((req.body || {}).password || ''), h(ADMIN_PASSWORD))) return bad(res, 'Wrong password', 401);
-  res.json({ token: sign(Date.now() + 12 * 3600e3), defaultPassword: ADMIN_PASSWORD === 'changeme' });
+  if (!checkPw((req.body || {}).password)) return bad(res, 'Wrong password', 401);
+  res.json({ token: sign(Date.now() + 12 * 3600e3), defaultPassword: isDefaultPw() });
 });
 app.use('/api/admin', (req, res, next) => verify((req.get('authorization') || '').replace(/^Bearer /, '')) ? next() : bad(res, 'Unauthorized', 401));
 app.get('/admin/uploads/:f', (req, res) => verify(req.query.t) ? res.sendFile(path.join(UPLOAD_DIR, path.basename(req.params.f))) : res.sendStatus(401));
 
+app.post('/api/admin/password', loginLimiter, (req, res) => {
+  const b = req.body || {};
+  if (!checkPw(b.current)) return bad(res, 'Current password is wrong', 403);
+  if (typeof b.next !== 'string' || b.next.length < 8) return bad(res, 'New password must be at least 8 characters');
+  if (b.next.length > 200) return bad(res, 'New password too long');
+  if (b.next !== b.confirm) return bad(res, 'New passwords do not match');
+  setSetting('adminPasswordHash', hashPw(b.next));
+  setSetting('sessionGen', gen() + 1);
+  res.json({ ok: true, token: sign(Date.now() + 12 * 3600e3) });
+});
 app.get('/api/admin/orders', (req, res) => {
   const s = req.query.status; const rows = s && STATUSES.includes(s) ? db.prepare('SELECT * FROM orders WHERE status=? ORDER BY id DESC').all(s) : db.prepare('SELECT * FROM orders ORDER BY id DESC LIMIT 500').all();
   const counts = Object.fromEntries(db.prepare('SELECT status,COUNT(*) c FROM orders GROUP BY status').all().map(r => [r.status, r.c]));
-  res.json({ orders: rows.map(orderRow), counts, statuses: STATUSES, defaultPassword: ADMIN_PASSWORD === 'changeme' });
+  res.json({ orders: rows.map(orderRow), counts, statuses: STATUSES, defaultPassword: isDefaultPw() });
 });
 app.patch('/api/admin/orders/:number', (req, res) => {
   const o = db.prepare('SELECT * FROM orders WHERE number=?').get(req.params.number); if (!o) return bad(res, 'Not found', 404);
