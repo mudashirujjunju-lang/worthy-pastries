@@ -207,6 +207,8 @@ app.delete('/api/admin/reviews/:id', (req, res) => { db.prepare('DELETE FROM rev
 app.get('/api/admin/custom-requests', (req, res) => res.json(db.prepare('SELECT * FROM custom_requests ORDER BY id DESC').all()));
 app.patch('/api/admin/custom-requests/:id', (req, res) => { const s = (req.body || {}).status; if (!['New', 'Quoted', 'Accepted', 'Declined', 'Done'].includes(s)) return bad(res, 'Invalid status'); db.prepare('UPDATE custom_requests SET status=? WHERE id=?').run(s, req.params.id); res.json({ ok: true }); });
 
+app.use(['/admin', '/api/admin'], (req, res, next) => { res.set('X-Robots-Tag', 'noindex, nofollow'); next(); });
+// Verification files (google*.html, BingSiteAuth.xml, yandex_*.html, <indexnow-key>.txt) dropped into public/ are served by express.static below.
 app.get('/healthz', (req, res) => res.send('ok'));
 app.get(['/admin', '/admin/'], (req, res) => res.sendFile(path.join(__dirname, 'public', 'admin.html')));
 app.get('/track', (req, res) => res.sendFile(path.join(__dirname, 'public', 'track.html')));

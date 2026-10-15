@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /api/admin
+
+Sitemap: https://worthy-pastries.onrender.com/sitemap.xml
