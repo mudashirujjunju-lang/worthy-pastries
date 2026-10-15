@@ -1,6 +1,6 @@
 # Worthy Pastries — Online Ordering Platform
 
-Cake ordering site + admin dashboard for **Worthy Pastries** (Norah Tumuhibise, Makindye, Kampala · WhatsApp +256 772 947 573).
+Cake ordering site + admin dashboard for **Worthy Pastries** (Norah Tumuhimbise, Makindye, Kampala · WhatsApp +256 772 947 573).
 Node.js + Express + SQLite (better-sqlite3). No build step.
 
 ## Features
