@@ -9,5 +9,7 @@ services:
     envVars:
       - key: ADMIN_PASSWORD
         sync: false
+      - key: DATABASE_URL # Internal Database URL of worthy-pastries-db (free Render Postgres)
+        sync: false
       - key: NODE_VERSION
         value: "20"

@@ -59,3 +59,10 @@ Real automated payments need merchant API accounts: **MTN MoMo Open API** (momod
 ## API (summary)
 Public: `GET /api/menu`, `GET /api/site`, `POST /api/quote`, `POST /api/orders`, `POST /api/track`, `POST /api/custom-requests`.
 Admin (Bearer token from `POST /api/admin/login`): `/api/admin/orders` (GET, PATCH `/:number`), `/cakes`, `/promos`, `/reviews`, `/settings`, `/custom-requests`.
+
+## Data persistence (free plan)
+Render's free web service wipes its disk on every restart/redeploy. `persist.js` snapshots the whole SQLite
+database (orders, menu, settings, admin password hash, uploaded photos stored as BLOBs) into Postgres after
+every change and restores it on boot. Set `DATABASE_URL` to any Postgres URL (Render, Neon, Supabase).
+Without it the app still runs but data is lost on restart. Check: `GET /api/persistence` -> `{"durable":true}`.
+Note: Render free Postgres expires 30 days after creation - move to a new DB (copy the `sqlite_snapshot` row) before then.
