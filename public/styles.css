@@ -68,3 +68,5 @@ details{background:#fff;border-radius:12px;padding:.8rem 1rem;margin:.5rem auto;
 .social a{margin:0 .4rem}
 .wa-float{position:fixed;right:16px;bottom:16px;width:58px;height:58px;border-radius:50%;background:#25d366;display:grid;place-items:center;box-shadow:0 6px 18px #0004;z-index:20}
 .status-steps{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center}.status-steps li{padding:.3rem .7rem;border-radius:99px;background:#eee;font-size:.85rem}.status-steps li.done{background:var(--brown);color:#fff}
+.footer .credit{font-size:.75rem;opacity:.6;margin-top:.6rem;letter-spacing:.02em}
+.footer .credit strong{font-weight:600}

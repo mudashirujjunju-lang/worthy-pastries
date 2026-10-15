@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="author" content="MudaTechs"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Track your order · Worthy Pastries</title><meta name="theme-color" content="#7a3e1d"><link rel="icon" href="icon.svg"><link rel="stylesheet" href="styles.css"></head><body>
 <header class="nav"><a href="/" class="brand">🎂 Worthy Pastries</a><a href="/#menu" class="cart-btn">Order</a></header>
 <main class="section"><h2>Track your order</h2>
@@ -7,6 +7,7 @@
 <p id="err" class="error" hidden></p><button class="btn wide">Check status</button></form>
 <div id="res" class="confirm" hidden style="margin-top:1.5rem"></div></main>
 <a class="wa-float" href="https://wa.me/256772947573" target="_blank" rel="noopener" aria-label="WhatsApp">💬</a>
+<footer class="footer"><p class="credit">Website designed by <strong>MudaTechs</strong></p></footer>
 <script>
 const $=s=>document.querySelector(s),fmt=n=>'UGX '+Number(n).toLocaleString('en-US'),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const S=['New','Confirmed','Baking','Out for delivery','Delivered'];const f=$('#tf');
