@@ -1,6 +1,12 @@
-:root{--brown:#7a3e1d;--cream:#fff6ea;--pink:#f6c1c7;--gold:#e8a33d;--choc:#3b1f12}
+/* ---- self-hosted fonts (offline-ready) ---- */
+@font-face{font-family:"Great Vibes";src:url(/fonts/greatvibes-400.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Cinzel";src:url(/fonts/cinzel-var.woff2) format("woff2");font-weight:400 900;font-display:swap}
+@font-face{font-family:"Poppins";src:url(/fonts/poppins-400.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Poppins";src:url(/fonts/poppins-600.woff2) format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:"Poppins";src:url(/fonts/poppins-700.woff2) format("woff2");font-weight:700 900;font-display:swap}
+:root{--brown:#7a3e1d;--cream:#fff6ea;--pink:#f6c1c7;--gold:#e8a33d;--choc:#3b1f12;--script:"Great Vibes",cursive;--serif:"Cinzel","Playfair Display",Georgia,serif;--sans:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 *{box-sizing:border-box}html{scroll-behavior:smooth}
-body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--cream);color:var(--choc);line-height:1.5}
+body{margin:0;font-family:var(--sans);background:var(--cream);color:var(--choc);line-height:1.5}
 a{color:var(--brown)}
 .nav{position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center;padding:.7rem 1rem;background:var(--brown);color:#fff}
 .nav a{color:#fff;text-decoration:none;font-weight:700}
@@ -80,3 +86,22 @@ details{background:#fff;border-radius:12px;padding:.8rem 1rem;margin:.5rem auto;
 .baker-name{font-family:Georgia,serif;color:var(--brown);margin:.2rem 0 .4rem;font-size:1.3rem}.baker-name span{display:block;font-size:.95rem;font-weight:400;color:var(--choc)}
 .baker-line{margin:0;font-style:italic}
 @media(min-width:640px){.baker-card{flex-direction:row;text-align:left;padding:1.6rem 2rem}.baker-photo{width:170px;height:170px;flex-shrink:0}}
+
+/* ---- typography: promo-video style ---- */
+.nav .brand{font-family:var(--script);font-weight:400;font-size:1.75rem;line-height:1;color:#ffe2a8;text-shadow:0 1px 2px #0005}
+h1,h2,.baker-name{font-family:var(--script);font-weight:400;background:linear-gradient(180deg,#b9781a 0%,#8f5410 45%,#6b3410 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;filter:drop-shadow(0 1px 0 #fff8) drop-shadow(0 2px 3px #7a3e1d33)}
+h1{font-size:clamp(3rem,13vw,4.6rem);line-height:1.15;margin:.2rem 0 .4rem;padding:0 .2em}
+h2{font-size:clamp(2.3rem,9vw,3rem);line-height:1.2;padding:0 .15em}
+h3,.cat,.card h3,.cotw h3,summary{font-family:var(--serif);font-weight:700;letter-spacing:.02em}
+.card h3{font-size:1.05rem;color:var(--brown)}.cat{color:var(--brown)}
+.cotw h3{color:#ffe2a8}
+.btn,.badges li,.cotw .tag,.baker-kicker,.occ-card,.status-steps li{font-family:var(--serif);letter-spacing:.04em}
+.btn{font-weight:700}.badges li b{font-family:var(--sans)}
+.price,input,select,textarea,.ordno,.totals,.summary,.cart-list{font-family:var(--sans)}
+.baker-name{font-size:2.3rem;line-height:1.2;margin:.1rem 0 .3rem}
+.baker-name span{font-family:var(--sans);font-size:.95rem;-webkit-text-fill-color:var(--choc);color:var(--choc);filter:none}
+.footer .brand-line{margin:.2rem 0}
+.footer .logo-script{font-family:var(--script);font-size:2rem;line-height:1.2;background:linear-gradient(180deg,#ffe2a8,#e8a33d);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:#e8a33d}
+.footer{padding-bottom:5.5rem}
+.nav .brand,.links a{white-space:nowrap}
+@media(max-width:400px){.nav .brand{font-size:1.5rem}.links{gap:.5rem}.links a{font-size:.85rem}}

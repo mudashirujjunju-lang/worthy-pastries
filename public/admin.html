@@ -1,6 +1,8 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="author" content="Mudajjunju (MudaTechs)"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex"><title>Admin · Worthy Pastries</title><link rel="icon" href="/icon.svg">
 <style>
+@font-face{font-family:"Great Vibes";src:url(/fonts/greatvibes-400.woff2) format("woff2");font-display:swap}
+.script{font-family:"Great Vibes",cursive;font-weight:400}header b.script{font-size:1.7rem;line-height:1;color:#ffe2a8}.login h2.script{font-size:2.2rem;color:var(--brown);text-align:center}
 :root{--brown:#7a3e1d;--cream:#fff6ea;--gold:#e8a33d}*{box-sizing:border-box}
 body{margin:0;font-family:system-ui,sans-serif;background:#f6f1ea;color:#3b1f12;font-size:14px}
 header{background:var(--brown);color:#fff;padding:.7rem 1.2rem;display:flex;justify-content:space-between;align-items:center}
@@ -29,9 +31,9 @@ let token=sessionStorage.getItem('wp-admin'),tab='orders',filter='',sel=null,ORD
 const api=async(url,method='GET',body)=>{const r=await fetch(url,{method,headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:body?JSON.stringify(body):undefined});const j=await r.json().catch(()=>({}));if(r.status===401){token=null;sessionStorage.removeItem('wp-admin');login();throw new Error('Session expired')}if(!r.ok)throw new Error(j.error||'Error');return j};
 const toast=m=>{const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.append(t);setTimeout(()=>t.remove(),1800)};
 const fail=e=>alert(e.message);
-function login(){$('#app').innerHTML=`<form class="login" id="lf"><h2 style="margin:0">🎂 Worthy Pastries Admin</h2><input type="password" name="p" placeholder="Admin password" required autofocus><p class="err" id="le"></p><button class="b">Log in</button></form>`;
+function login(){$('#app').innerHTML=`<form class="login" id="lf"><h2 class="script" style="margin:0">🎂 Worthy Pastries Admin</h2><input type="password" name="p" placeholder="Admin password" required autofocus><p class="err" id="le"></p><button class="b">Log in</button></form>`;
 $('#lf').onsubmit=async e=>{e.preventDefault();const r=await fetch('/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:e.target.p.value})});const j=await r.json();if(!r.ok)return $('#le').textContent=j.error;token=j.token;sessionStorage.setItem('wp-admin',token);shell()}}
-function shell(){$('#app').innerHTML=`<header><b>🎂 Worthy Pastries · Admin</b><span><a href="/" target="_blank" style="color:#fff">View site</a> &nbsp; <button class="b g" id="lo">Log out</button></span></header>
+function shell(){$('#app').innerHTML=`<header><b class="script">🎂 Worthy Pastries · Admin</b><span><a href="/" target="_blank" style="color:#fff">View site</a> &nbsp; <button class="b g" id="lo">Log out</button></span></header>
 <nav class="tabs">${[['orders','📦 Orders'],['custom','🎨 Custom requests'],['menu','🍰 Menu'],['promos','🏷️ Promo codes'],['reviews','⭐ Reviews'],['settings','⚙️ Settings']].map(([k,l])=>`<button data-tab="${k}" class="${k===tab?'on':''}">${l}</button>`).join('')}</nav><main id="main"></main>`;
 $('#lo').onclick=()=>{sessionStorage.removeItem('wp-admin');token=null;login()};document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;shell()});({orders,custom,menu,promos,reviews,settings})[tab]().catch(fail)}
 const warnBox=()=>warnDefault?'<div class="warn">⚠️ You are using the default admin password <b>changeme</b>. Set the <code>ADMIN_PASSWORD</code> environment variable before going live.</div>':'';
